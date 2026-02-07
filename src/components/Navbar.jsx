@@ -129,7 +129,7 @@ const Navbar = () => {
               {(activeTab !== null || hoveredTab !== null) && (
                 <div
                   className={`absolute bottom-0 h-0.5 transition-all duration-300 ease-out ${
-                    isScrolled ? 'bg-teal-600' : 'bg-white'
+                    isScrolled ? 'bg-teal-600' : 'bg-teal-600'
                   }`}
                   style={{
                     left: `${tabIndicator.left}px`,
@@ -149,10 +149,10 @@ const Navbar = () => {
                     activeTab === index || hoveredTab === index
                       ? isScrolled 
                         ? 'text-teal-600' 
-                        : 'text-white'
+                        : 'text-teal-600'
                       : isScrolled 
                         ? 'text-teal-900 hover:text-teal-600' 
-                        : 'text-white/80 hover:text-white'
+                        : 'text-teal-700 hover:text-teal-600'
                   }`}
                 >
                   {link.name}
@@ -168,7 +168,7 @@ const Navbar = () => {
               className={`p-2 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500 ${
                 isScrolled 
                   ? 'text-teal-900 hover:bg-teal-100' 
-                  : 'text-white hover:bg-white/10'
+                  : 'text-teal-700 hover:bg-white/10'
               }`}
               aria-label="Toggle menu"
             >
