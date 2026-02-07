@@ -1,49 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(null);
+  const [hoveredTab, setHoveredTab] = useState(null);
+  const [tabIndicator, setTabIndicator] = useState({ left: 0, width: 0 });
+  const linkRefs = useRef([]);
+
+  const navLinks = [
+    { name: 'Home', href: '#home' },
+    { name: 'About Doctor', href: '#about' },
+    { name: 'Services', href: '#services' },
+    { name: 'Contact', href: '#contact' }
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Add smooth scrolling function
-  const handleSmoothScroll = (e, href) => {
-    e.preventDefault();
+  // Update tab indicator position
+  useEffect(() => {
+    const currentTab = hoveredTab !== null ? hoveredTab : activeTab;
     
-    if (href.startsWith('#')) {
-      const id = href.substring(1);
-      const element = document.getElementById(id);
+    if (currentTab !== null) {
+      const activeLink = linkRefs.current[currentTab];
       
-      if (element) {
-        // Close mobile menu if open
-        setIsMobileMenuOpen(false);
-        
-        // Smooth scroll to element
-        window.scrollTo({
-          top: element.offsetTop - 80, // Adjust offset for navbar height
-          behavior: 'smooth'
+      if (activeLink) {
+        setTabIndicator({
+          left: activeLink.offsetLeft,
+          width: activeLink.offsetWidth
         });
       }
     }
-  };
+  }, [activeTab, hoveredTab, isScrolled]);
 
-  const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About Doctor', href: '#about' },
-    { name: 'Services', href: '#services' },
-    { name: 'Contact', href: '#contact' },
-  ];
+  const handleSmoothScroll = (e, href, index) => {
+    e.preventDefault();
+    setActiveTab(index);
+    
+    if (href.startsWith('#')) {
+      const id = href.substring(1);
+      
+      let element = document.getElementById(id);
+      
+      if (!element) {
+        element = document.getElementById(id.toLowerCase()) || 
+                  document.getElementById(id.toUpperCase());
+      }
+      
+      if (element) {
+        setIsMobileMenuOpen(false);
+        
+        const navbarHeight = 80;
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - navbarHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+        
+        // Update URL hash without reloading
+        window.history.pushState(null, null, href);
+      }
+    }
+  };
 
   return (
     <nav 
@@ -56,11 +83,10 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 lg:h-24">
           
-          {/* Logo */}
           <div className="flex-shrink-0 group">
             <a 
               href="#home" 
-              onClick={(e) => handleSmoothScroll(e, '#home')}
+              onClick={(e) => handleSmoothScroll(e, '#home', 0)}
               className="flex items-center h-full"
             >
               <img 
@@ -75,30 +101,64 @@ const Navbar = () => {
             </a>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-1">
-            {navLinks.map((link, index) => (
-              <a
-                key={index}
-                href={link.href}
-                onClick={(e) => handleSmoothScroll(e, link.href)}
-                className={`relative px-4 py-2 text-sm xl:text-base font-medium transition-colors duration-300 group ${
-                  isScrolled 
-                    ? 'text-teal-900 hover:text-teal-600' 
-                    : 'text-white hover:text-teal-200'
-                }`}
-              >
-                {link.name}
-                
-                {/* Animated underline */}
-                <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 ease-out group-hover:w-full ${
-                  isScrolled ? 'bg-teal-600' : 'bg-white'
-                }`}></span>
-                
-                {/* Hover glow effect */}
-                <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-teal-400/0 via-teal-400/10 to-teal-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></span>
-              </a>
-            ))}
+          {/* Desktop Navigation with Tab Animation */}
+          <div className="hidden lg:flex items-center relative">
+            <div 
+              className="flex items-center space-x-1 relative"
+              onMouseLeave={() => {
+                setHoveredTab(null);
+                setActiveTab(null);
+              }}
+            >
+              {/* Animated background indicator - only show when there's an active or hovered tab */}
+              {(activeTab !== null || hoveredTab !== null) && (
+                <div
+                  className={`absolute inset-y-0 rounded-lg transition-all duration-300 ease-out ${
+                    isScrolled 
+                      ? 'bg-teal-100/50' 
+                      : 'bg-white/10'
+                  }`}
+                  style={{
+                    left: `${tabIndicator.left}px`,
+                    width: `${tabIndicator.width}px`,
+                  }}
+                />
+              )}
+              
+              {/* Animated tab indicator - only show when there's an active or hovered tab */}
+              {(activeTab !== null || hoveredTab !== null) && (
+                <div
+                  className={`absolute bottom-0 h-0.5 transition-all duration-300 ease-out ${
+                    isScrolled ? 'bg-teal-600' : 'bg-white'
+                  }`}
+                  style={{
+                    left: `${tabIndicator.left}px`,
+                    width: `${tabIndicator.width}px`,
+                  }}
+                />
+              )}
+
+              {navLinks.map((link, index) => (
+                <a
+                  key={index}
+                  ref={(el) => (linkRefs.current[index] = el)}
+                  href={link.href}
+                  onClick={(e) => handleSmoothScroll(e, link.href, index)}
+                  onMouseEnter={() => setHoveredTab(index)}
+                  className={`relative z-10 px-4 py-2 text-sm xl:text-base font-medium transition-colors duration-300 ${
+                    activeTab === index || hoveredTab === index
+                      ? isScrolled 
+                        ? 'text-teal-600' 
+                        : 'text-white'
+                      : isScrolled 
+                        ? 'text-teal-900 hover:text-teal-600' 
+                        : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  {link.name}
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Mobile menu button */}
@@ -146,14 +206,15 @@ const Navbar = () => {
             <a
               key={index}
               href={link.href}
-              onClick={(e) => {
-                handleSmoothScroll(e, link.href);
-                setIsMobileMenuOpen(false);
-              }}
+              onClick={(e) => handleSmoothScroll(e, link.href, index)}
               className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 transform hover:translate-x-2 ${
-                isScrolled 
-                  ? 'text-teal-900 hover:bg-teal-100 hover:text-teal-600' 
-                  : 'text-white hover:bg-white/10 hover:text-teal-200'
+                activeTab === index
+                  ? isScrolled
+                    ? 'bg-teal-100 text-teal-600'
+                    : 'bg-white/20 text-white'
+                  : isScrolled 
+                    ? 'text-teal-900 hover:bg-teal-100 hover:text-teal-600' 
+                    : 'text-white hover:bg-white/10 hover:text-teal-200'
               }`}
               style={{ 
                 animationDelay: `${index * 50}ms`,

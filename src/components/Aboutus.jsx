@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BadgeCheck, Users, Clock, AlertCircle } from 'lucide-react';
+import { Award, Users, Calendar, Clock } from 'lucide-react';
 
 const AboutUs = () => {
   const sectionRef = useRef(null);
@@ -113,13 +113,13 @@ const AboutUs = () => {
             {/* Key Highlights - All cards with same design */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-4 sm:mt-6">
               
-              {/* Card 1: MBBS, MD Certified */}
+              {/* Card 1: MBBS, MD Certified - Now with Award/Certificate Icon */}
               <div className={`group bg-gradient-to-br from-white to-white backdrop-blur-sm rounded-xl p-3 sm:p-4 lg:p-5 shadow-lg hover:shadow-2xl border-2 border-[#499a3f]/30 transition-all duration-500 hover:scale-105 hover:border-[#499a3f]/50 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
               }`} style={{ transitionDelay: '400ms' }}>
                 <div className="flex items-start space-x-3">
                   <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-[#499a3f] to-[#5aad50] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                    <BadgeCheck className="w-6 h-6 sm:w-7 sm:h-7 text-white" strokeWidth={2.5} />
+                    <Award className="w-6 h-6 sm:w-7 sm:h-7 text-white" strokeWidth={2.5} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm sm:text-base lg:text-lg font-bold text-[#416267] mb-1">MBBS, MD Certified</h4>
@@ -143,13 +143,13 @@ const AboutUs = () => {
                 </div>
               </div>
 
-              {/* Card 3: 15+ Years Experience */}
+              {/* Card 3: 15+ Years Experience - Now with Calendar Icon */}
               <div className={`group bg-gradient-to-br from-white to-white backdrop-blur-sm rounded-xl p-3 sm:p-4 lg:p-5 shadow-lg hover:shadow-2xl border-2 border-[#499a3f]/30 transition-all duration-500 hover:scale-105 hover:border-[#499a3f]/50 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
               }`} style={{ transitionDelay: '600ms' }}>
                 <div className="flex items-start space-x-3">
                   <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-[#499a3f] to-[#5aad50] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                    <Clock className="w-6 h-6 sm:w-7 sm:h-7 text-white" strokeWidth={2.5} />
+                    <Calendar className="w-6 h-6 sm:w-7 sm:h-7 text-white" strokeWidth={2.5} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm sm:text-base lg:text-lg font-bold text-[#416267] mb-1">15+ Years Experience</h4>
@@ -158,13 +158,13 @@ const AboutUs = () => {
                 </div>
               </div>
 
-              {/* Card 4: 24/7 Emergency Care */}
+              {/* Card 4: 24/7 Emergency Care - Now with Clock Icon */}
               <div className={`group bg-gradient-to-br from-white to-white backdrop-blur-sm rounded-xl p-3 sm:p-4 lg:p-5 shadow-lg hover:shadow-2xl border-2 border-[#499a3f]/30 transition-all duration-500 hover:scale-105 hover:border-[#499a3f]/50 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
               }`} style={{ transitionDelay: '700ms' }}>
                 <div className="flex items-start space-x-3">
                   <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-[#499a3f] to-[#5aad50] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                    <AlertCircle className="w-6 h-6 sm:w-7 sm:h-7 text-white" strokeWidth={2.5} />
+                    <Clock className="w-6 h-6 sm:w-7 sm:h-7 text-white" strokeWidth={2.5} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm sm:text-base lg:text-lg font-bold text-[#416267] mb-1">24/7 Emergency Care</h4>
